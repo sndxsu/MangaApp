@@ -64,7 +64,7 @@ namespace WindowsFormsApp1.UI.AdminSide
                 return;
             }
 
-            if (pathes.Length == 0)
+            if (pathes == null || pathes.Length == 0)
             {
                 MaterialMessageBox.Show("Не додані файли!");
                 return;
@@ -74,11 +74,12 @@ namespace WindowsFormsApp1.UI.AdminSide
             string name = materialTextBox21.Text;
             string description = materialMultiLineTextBox21.Text;
             List<string> path = new List<string>();
-            string MangaPath = "data\\manga_catalog\\" + name + "\\";
-            if (!Directory.Exists(MangaPath)) Directory.CreateDirectory(MangaPath);
+            string MangaPath = "data\\manga_catalog\\";
+            if (!Directory.Exists(MangaPath + name)) Directory.CreateDirectory(MangaPath + name);
+            if (!File.Exists(MangaPath + "manga")) File.Create(MangaPath + "manga");
             for (int i = 0; i<pathes.Length; i++)
             {
-                string res = MangaPath + i + ".cbz";
+                string res = MangaPath + name + "\\" + i + ".cbz";
                 if (File.Exists(res)) File.Delete(res);
                 File.Copy(pathes[i], res);
                 path.Add(res);

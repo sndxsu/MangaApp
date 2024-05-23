@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AuthPage));
             this.materialLabel1 = new MaterialSkin.Controls.MaterialLabel();
             this.materialTextBox22 = new MaterialSkin.Controls.MaterialTextBox2();
             this.materialLabel4 = new MaterialSkin.Controls.MaterialLabel();
@@ -152,7 +153,7 @@
             this.materialButton2.Depth = 0;
             this.materialButton2.HighEmphasis = true;
             this.materialButton2.Icon = null;
-            this.materialButton2.Location = new System.Drawing.Point(89, 447);
+            this.materialButton2.Location = new System.Drawing.Point(273, 447);
             this.materialButton2.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.materialButton2.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialButton2.Name = "materialButton2";
@@ -182,7 +183,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(442, 517);
+            this.ClientSize = new System.Drawing.Size(442, 500);
             this.Controls.Add(this.materialButton2);
             this.Controls.Add(this.materialButton1);
             this.Controls.Add(this.materialLabel4);
@@ -190,6 +191,7 @@
             this.Controls.Add(this.materialTextBox21);
             this.Controls.Add(this.materialLabel1);
             this.Controls.Add(this.pictureBox1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "AuthPage";
             this.Sizable = false;

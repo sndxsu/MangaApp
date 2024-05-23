@@ -10,13 +10,11 @@ namespace WindowsFormsApp1.UI.Reader.Reader
 {
     public partial class Reader : MaterialForm
     {
-        string path;
         ThemeControl theme;
         private List<Image> images;
         private int currentIndex = 0;
         public Reader(string path)
         {
-            this.path = path;
             theme = new ThemeControl(this);
             theme.Initialize();
             InitializeComponent();

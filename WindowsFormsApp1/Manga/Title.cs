@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using Newtonsoft.Json;
-using WindowsFormsApp1.Users;
 
 namespace WindowsFormsApp1.Manga
 {
@@ -13,9 +11,9 @@ namespace WindowsFormsApp1.Manga
         public string Name { get; set; }
         public string Description { get; set; }
         public List<string> Chapters { get; private set; }
+        public RatingControl RatingControl { get; private set; }
 
-        const string PATH_TO_ARRAY_DATA = "data\\manga_catalog\\manga";
-        const string PATH_TO_DIR = "data\\manga_catalog\\";
+        const string PATH_TO_ARRAY_DATA = "data\\manga_catalog\\";
 
         public string PathToImg { get; set; }
 
@@ -41,7 +39,7 @@ namespace WindowsFormsApp1.Manga
         private string GetPathImage(Image img)
         {
             if (img == null) return null;
-            string res = PATH_TO_DIR+ $"{Name}\\";
+            string res = PATH_TO_ARRAY_DATA+ $"{Name}\\";
             if (makeFolder(res))
             {
                 img.Save(res + "preview");
@@ -60,24 +58,27 @@ namespace WindowsFormsApp1.Manga
         public static void SerializeArrayToFile(List<Title> titles, string path)
         {
             string json = JsonConvert.SerializeObject(titles, Formatting.Indented);
-            File.WriteAllText(path, json);
+            File.WriteAllText(path + "\\manga", json);
         }
 
         public static List<Title> DeserializeArrayFromFile(string path)
         {
-            if (File.Exists(path))
+            if (File.Exists(path + "\\manga"))
             {
-                string json = File.ReadAllText(path);
+                string json = File.ReadAllText(path + "\\manga");
                 List<Title> res = JsonConvert.DeserializeObject<List<Title>>(json);
                 if (res == null) return new List<Title>();
                 else return res;
             }
             else
             {
-                File.Create(path);
+                Directory.CreateDirectory(path);
+                File.Create(path + "manga");
                 return new List<Title>();
             }
         }
+
+
 
         public static List<Title> DeserializeAllTitles() => DeserializeArrayFromFile(PATH_TO_ARRAY_DATA);
         public static void SerializeAllTitles(List<Title> titles) => SerializeArrayToFile(titles, PATH_TO_ARRAY_DATA);

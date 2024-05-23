@@ -33,5 +33,10 @@ namespace WindowsFormsApp1.UI.Reader
             Reader.Reader r = new Reader.Reader(Chapter);
             r.Show();
         }
+
+        public void Reader()
+        {
+            BackColor = Color.Black;
+        }
     }
 }

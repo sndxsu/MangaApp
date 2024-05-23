@@ -27,9 +27,10 @@ namespace WindowsFormsApp1.UI
         {
             if (s != null)
             {
-                if (s.Auth())
+                Account acc = s.AccountIsExist(true);
+                if (acc != null)
                 {
-                    if (Account.isAdmin(s))
+                    if (acc.isAdmin())
                     {
                         AdminForm adminForm = new AdminForm();
                         adminForm.Show();
@@ -37,8 +38,8 @@ namespace WindowsFormsApp1.UI
                     }
                     else 
                     {
-                        UserForm u = new UserForm((User)s);
-                        (s as User).SaveLogin();
+                        UserForm u = new UserForm((User)acc);
+                        (acc as User).SaveLogin();
                         u.Show();
                     }
                     this.Hide();
@@ -54,7 +55,7 @@ namespace WindowsFormsApp1.UI
             {
                 string username = materialTextBox21.Text;
                 string password = materialTextBox22.Text;
-                User user = new User(username);
+                var user = new User(username);
                 user.SetPassword(password);
                 if (!AuthUser(user))
                 {
@@ -80,7 +81,6 @@ namespace WindowsFormsApp1.UI
                 else
                 {
                     MaterialMessageBox.Show("Реєстрація успішна", false);
-                    user.Auth();
                 }
             }
         }

@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,52 +13,39 @@ namespace WindowsFormsApp1.Users
         public int id { get; protected set; }
         public string Username { get; protected set; }
         public string Password { get; protected set; }
-        public string AccountType { get; protected set; }
+        public string AccountType { get; set; }
 
         protected const string PATH_TO_FILE = "userdata";
         protected const string PATH_TO_AUTHDATA = "acc";
 
-        public bool Auth()
-        {
-            if (this != null && AccountIsExist(this, true)) return true;
-            else return false;
-        }
-        public bool AccountIsExist(Account acc, bool checkPassword)
+        protected const string PATH_TO_USERSFAV = "data\\users_info";
+        protected const string PATH_TO_AVATARS = "data\\users_info\\avatars\\";
+
+
+        public abstract bool isAdmin();
+
+        //повертає аккаунт, якщо існує
+        public Account AccountIsExist(bool checkPassword)
         {
             List<Account> accounts = DeserializeAccounts(PATH_TO_FILE);
-            Boolean res = false;
+            Account res = null;
             foreach (Account c in accounts)
             {
                 if (checkPassword)
                 {
-                    if (acc.Username == c.Username && acc.Password == c.Password)
+                    if (this.Username == c.Username && this.Password == c.Password)
                     {
-                        res = true; break;
+                        res = c; break;
                     }
                 }
-                else if (acc.Username == c.Username)
+                else if (this.Username == c.Username)
                 {
-                    res = true; break;
+                    res = c; break;
                 }
             }
             return res;
         }
 
-        public static bool isAdmin(Account account)
-        {
-
-            List<Account> accounts = Account.DeserializeAccounts(PATH_TO_FILE);
-            bool res = false;
-            foreach (Account c in accounts){
-                if (account.Username == c.Username && account.Password == c.Password && c.AccountType == "Admin")
-                {
-                    res = true;
-                    break;
-                }
-            }
-            return res;
-
-        }
 
         public bool CheckHashEquals(string tmpNewHash, string tmpHash)
         {
@@ -113,7 +99,7 @@ namespace WindowsFormsApp1.Users
                 fs.Close();
             }
 
-            if (AccountIsExist(this, false))
+            if (this.AccountIsExist(false) != null)
             {
                 return false;
             }
@@ -128,6 +114,12 @@ namespace WindowsFormsApp1.Users
                 File.WriteAllText(PATH_TO_FILE, output);
                 return true;
             }
+        }
+
+        protected void SerializeAccounts(List<Account> accounts)
+        {
+            string output = JsonConvert.SerializeObject(accounts, Formatting.Indented);
+            File.WriteAllText(PATH_TO_FILE, output);
         }
 
         public void SaveLogin()

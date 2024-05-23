@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using WindowsFormsApp1.Manga;
@@ -8,22 +11,63 @@ namespace WindowsFormsApp1.Users
 {
     public class User:Account
     {
-        private const string PATH_TO_USERSFAV = "data\\users_info";
+
         private List<Title> FavoriteTitles;
+        public string avatarPath;
         public User(string username) : base (username){
             base.AccountType = "User";
+            avatarPath = "default";
         }
         [JsonConstructor]
-        public User(int id, string username, string password) : base(username)
+        public User(int id, string username, string password, string avatarPath) : base(username)
         {
             base.id = id;
             Password = password;
             base.AccountType = "User";
             FavoriteTitles = new List<Title>();
+            this.avatarPath = avatarPath;
         }
 
-        public List<Title> FavTitles => FavoriteTitles;
 
+        public void setAvatar(string path)
+        {
+            string destinationPath = PATH_TO_AVATARS + id;
+
+            if (!Directory.Exists(PATH_TO_AVATARS))
+                Directory.CreateDirectory(PATH_TO_AVATARS);
+            try
+            {
+                using (FileStream sourceStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+                {
+                    using (FileStream destStream = new FileStream(destinationPath, FileMode.Create, FileAccess.Write))
+                    {
+                        sourceStream.CopyTo(destStream);
+                    }
+                }
+                List<Account> accounts = DeserializeAccounts(PATH_TO_FILE);
+
+                for (int i = 0; i<accounts.Count; i++)
+                {
+                    if (accounts[i].id == this.id && accounts[i] is User)
+                    {
+                        (accounts[i] as User).avatarPath = destinationPath;
+                        this.avatarPath = destinationPath;
+                    }
+                }
+                SerializeAccounts(accounts);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Failed to set avatar", ex);
+            }
+            }
+
+
+        public bool avatarIsExit => !avatarPath.Equals("default");
+
+        public override bool isAdmin() => false;
+
+        public List<Title> FavTitles => FavoriteTitles;
 
         public static User LoggedBefore()
         {
@@ -49,12 +93,11 @@ namespace WindowsFormsApp1.Users
             return null;
         }
 
-
-        public void LoadFavTitles() => FavoriteTitles = Title.DeserializeArrayFromFile(PATH_TO_USERSFAV + id);
+        public void LoadFavTitles() => FavoriteTitles = Title.DeserializeArrayFromFile(PATH_TO_USERSFAV + "\\" + id);
 
         public void AddFavoriteTitle(Title manga) => FavoriteTitles.Add(manga);
 
-        public void SaveTitles() => Title.SerializeArrayToFile(FavoriteTitles, PATH_TO_USERSFAV + id);
+        public void SaveTitles() => Title.SerializeArrayToFile(FavoriteTitles, PATH_TO_USERSFAV  + "\\" + id);
 
         public void delSavedAcc() => File.Delete(PATH_TO_AUTHDATA);
 

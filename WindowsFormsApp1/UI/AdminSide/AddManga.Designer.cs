@@ -173,6 +173,8 @@
             this.MaximumSize = new System.Drawing.Size(437, 457);
             this.MinimumSize = new System.Drawing.Size(437, 457);
             this.Name = "AddManga";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.Sizable = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Добавити тайтл";
